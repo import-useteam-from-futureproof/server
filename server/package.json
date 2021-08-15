@@ -1,0 +1,29 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon -L index.js",
+		"test": "jest --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --silent --runInBand --verbose",
+		"unitTests": "jest --testPathPattern=/unit/ --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --verbose",
+		"integrationTests": "jest --testPathPattern=/integration/ --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --runInBand --verbose",
+		"componentTests": "jest --testPathPattern=/component/ --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --verbose",
+		"coverage": "jest --testPathPattern=/unit/ --coverage"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"mongodb": "^4.1.0",
+		"morgan": "^1.10.0"
+	},
+	"devDependencies": {
+		"jest": "^27.0.6",
+		"nodemon": "^2.0.12",
+		"supertest": "^6.1.5"
+	}
+}

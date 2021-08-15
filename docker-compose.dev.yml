@@ -1,0 +1,17 @@
+services:
+  server:
+    container_name: quiz_dev_api
+    ports:
+      - 5000:5000
+    environment:
+      - NODE_ENV=development
+    command: bash -c "npm install && npm run dev"
+  db:
+    container_name: quiz_dev_db
+    volumes:
+      - 'mongodata:/var/lib/mongodb/data'
+volumes:
+  mongodata:
+networks:
+  default:
+    name: quiz_dev

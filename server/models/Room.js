@@ -52,10 +52,8 @@ class Room {
 					public_room,
 					entry_pass,
 				});
-				console.log(roomData);
-				let newRoom = new Room(roomData.ops[0]);
-				console.log(newRoom);
-				resolve(newRoom);
+
+				resolve(roomData.insertedId);
 			} catch (err) {
 				reject('Error creating room');
 			}

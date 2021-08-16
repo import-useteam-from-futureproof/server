@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 		const user = await User.create(req.body.id, req.body.username, req.body.avatar_url);
 		res.status(201).json(user);
 	} catch (err) {
-		res.status(404).json({ err });
+		res.status(500).json({ err });
 	}
 });
 
@@ -27,7 +27,7 @@ router.patch('/:id', async (req, res) => {
 		const updatedUser = await user.update(req.body.avatar_url);
 		res.status(200).json({ user: updatedUser });
 	} catch (err) {
-		res.status(404).json({ err });
+		res.status(500).json({ err });
 	}
 });
 

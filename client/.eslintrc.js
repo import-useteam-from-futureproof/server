@@ -13,6 +13,7 @@ module.exports = {
 		sourceType: 'module',
 	},
 	plugins: ['react'],
+	ignorePatterns: ['**/*.test.js'],
 	rules: {
 		curly: 'error',
 		quotes: ['warn', 'single', { allowTemplateLiterals: true, avoidEscape: true }],

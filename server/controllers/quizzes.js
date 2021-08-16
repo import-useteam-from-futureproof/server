@@ -12,14 +12,6 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-router.get('/', async (req, res) => {
-	try {
-		const quiz = await Quiz.group();
-	} catch (err) {
-		res.status(404).json({ err });
-	}
-});
-
 router.post('/', async (req, res) => {
 	try {
 		const quiz = await Quiz.create(req.body.room_id);

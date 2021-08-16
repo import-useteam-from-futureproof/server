@@ -12,4 +12,14 @@ router.post('/', async (req, res) => {
 	}
 });
 
+router.patch('/:id', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+		const updatedUser = await user.update(req.body.avatar_url);
+		res.status(200).json({ user: updatedUser });
+	} catch (err) {
+		res.status(404).json({ err });
+	}
+});
+
 module.exports = router;

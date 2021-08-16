@@ -31,4 +31,14 @@ router.patch('/:id', async (req, res) => {
 	}
 });
 
+router.patch('/:id/highscore/:score', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+		const updatedUser = await user.updateHighScore(req.params.score);
+		res.status(200).json({ user: updatedUser });
+	} catch (err) {
+		res.status(500).json({ err });
+	}
+});
+
 module.exports = router;

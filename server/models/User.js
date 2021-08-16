@@ -7,6 +7,7 @@ class User {
 		this.firebase_id = data.firebase_id;
 		this.username = data.username;
 		this.avatar_url = data.avatar_url;
+		this.high_score = data.high_score;
 	}
 
 	static create(firebase_id, username) {
@@ -49,7 +50,7 @@ class User {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const db = await init();
-				const filter = { _id: this.id };
+				const filter = { firebase_id: this.id };
 				const update = { $set: { avatar_url: avatar_url } };
 				const updatedUserData = await db
 					.collection('users')
@@ -58,6 +59,31 @@ class User {
 				resolve(updatedUser);
 			} catch (err) {
 				reject('Error updating user');
+			}
+		});
+	}
+
+	updateHighScore(score) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+
+				const filter = { _id: this.id };
+				const userToCheck = await db.collection('users').findOne(filter);
+				console.log(userToCheck);
+
+				if (userToCheck.high_score > score) {
+					throw new Error('Score is too low, High Score remains unchanged');
+				}
+
+				const update = { $set: { high_score: score } };
+				const updatedUserData = await db
+					.collection('users')
+					.findOneAndUpdate(filter, update, { returnDocument: 'after' });
+				const updatedUser = new User({ ...updatedUserData.value, id: updatedUserData._id });
+				resolve(updatedUser);
+			} catch (err) {
+				reject(`${err}`);
 			}
 		});
 	}

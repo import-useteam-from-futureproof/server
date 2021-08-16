@@ -43,6 +43,18 @@ class Quiz {
 		});
 	}
 
+	static group() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+				resolve(quizData);
+			} catch (err) {
+				console.log(err);
+				reject('Error creating quiz');
+			}
+		});
+	}
+
 	static update(id, scores) {
 		return new Promise(async (resolve, reject) => {
 			try {

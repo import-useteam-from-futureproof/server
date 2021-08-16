@@ -11,8 +11,6 @@ const init = async () => {
 		process.env.ATLAS_DB +
 		'?retryWrites=true&w=majority';
 
-	console.log(uri);
-
 	const mongoClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 	try {

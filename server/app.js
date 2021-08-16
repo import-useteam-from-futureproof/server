@@ -10,8 +10,10 @@ server.use(morgan('dev'));
 
 const roomRoutes = require('./controllers/rooms');
 const userRoutes = require('./controllers/user');
+const quizRoutes = require('./controllers/quizzes');
 server.use('/rooms', roomRoutes);
 server.use('/user', userRoutes);
+server.use('/quiz', quizRoutes);
 
 server.get('/', (req, res) => {
 	res.status(200).send({ message: 'Hello world!' });

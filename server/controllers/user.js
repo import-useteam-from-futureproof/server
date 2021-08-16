@@ -14,7 +14,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	try {
-		const user = await User.create(req.body.id, req.body.username, req.body.avatar_url);
+		const user = await User.create(req.body.firebase_id, req.body.username);
 		res.status(201).json(user);
 	} catch (err) {
 		res.status(500).json({ err });

@@ -23,5 +23,6 @@ module.exports = {
 		'no-undef': 'error',
 		'no-multi-spaces': 'warn',
 		indent: ['warn', 'tab'],
+		ignoreTranspilerName: true,
 	},
 };

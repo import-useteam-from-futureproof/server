@@ -1,14 +1,15 @@
 const { init } = require('../dbConfig');
-const { ObjectId } = require('mongodb');
+//const { ObjectId } = require('mongodb');
 
 class User {
 	constructor(data) {
 		this.id = data._id;
+		this.firebase_id = data.firebase_id;
 		this.username = data.username;
 		this.avatar_url = data.avatar_url;
 	}
 
-	static create(user_id, username, avatar_url) {
+	static create(firebase_id, username) {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const db = await init();
@@ -19,12 +20,12 @@ class User {
 				}
 
 				let userData = await db.collection('users').insertOne({
-					_id: user_id,
+					firebase_id,
 					username,
-					avatar_url,
+					avatar_url: `https://avatars.dicebear.com/api/bottts/${username}.svg`,
 				});
 
-				resolve({ userId: userData.insertedId });
+				resolve({ _id: userData.insertedId });
 			} catch (err) {
 				reject(`${err}`);
 			}
@@ -35,8 +36,8 @@ class User {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const db = await init();
-				let userData = await db.collection('users').find({ _id: id }).toArray();
-				let user = new User({ ...userData[0], id: userData[0]._id });
+				let userData = await db.collection('users').findOne({ firebase_id: id });
+				let user = new User({ ...userData, id: userData._id });
 				resolve(user);
 			} catch (err) {
 				reject('User not found');

@@ -2,6 +2,9 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Profile } from './pages';
 
+// Pages //
+import { LandingPage } from './pages';
+
 export default function App() {
 	return (
 		<>
@@ -10,7 +13,7 @@ export default function App() {
 					<Profile />
 				</Route>
 				<Route path="/">
-					<h1>Hello world!</h1>
+					<LandingPage />
 				</Route>
 			</Switch>
 		</>

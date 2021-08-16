@@ -12,14 +12,21 @@ class User {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const db = await init();
+
+				const user = await db.collection('users').findOne({ username: username });
+				if (user) {
+					throw new Error('Username already in use');
+				}
+
 				let userData = await db.collection('users').insertOne({
 					_id: user_id,
 					username,
 					avatar_url,
 				});
-				resolve(userData.insertedId);
+
+				resolve({ userId: userData.insertedId });
 			} catch (err) {
-				reject('Error creating user');
+				reject(`${err}`);
 			}
 		});
 	}
@@ -29,9 +36,7 @@ class User {
 			try {
 				const db = await init();
 				let userData = await db.collection('users').find({ _id: id }).toArray();
-				console.log(userData);
 				let user = new User({ ...userData[0], id: userData[0]._id });
-				console.log(user);
 				resolve(user);
 			} catch (err) {
 				reject('User not found');

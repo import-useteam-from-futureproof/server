@@ -9,7 +9,9 @@ server.use(cors());
 server.use(morgan('dev'));
 
 const roomRoutes = require('./controllers/rooms');
+const userRoutes = require('./controllers/user');
 server.use('/rooms', roomRoutes);
+server.use('/user', userRoutes);
 
 server.get('/', (req, res) => {
 	res.status(200).send({ message: 'Hello world!' });

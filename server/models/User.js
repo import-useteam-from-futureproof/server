@@ -5,7 +5,7 @@ class User {
 	constructor(data) {
 		this.id = data.id;
 		this.name = data.name;
-		this.owner = data.owner;
+		this.avatar_url = data.avatar_url;
 	}
 
 	static create(user_id, username, avatar_url) {

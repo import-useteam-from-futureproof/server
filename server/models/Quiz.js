@@ -43,6 +43,41 @@ class Quiz {
 		});
 	}
 
+	static group() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+				// let quizData = await db.collection('quizzes').find().toArray();
+				let quizData = await db
+					.collection('quizzes')
+					.aggregate([
+						{
+							$lookup: {
+								from: 'users',
+								localField: '_id',
+								foreignField: '_id',
+								as: 'user',
+							},
+						},
+						// { $unwind: '$user' },
+						// {
+						// 	$project: {
+						// 		_id: 1,
+						// 		scores: 'scores',
+						// 		name: '$user.name',
+						// 	},
+						// },
+					])
+					.toArray();
+				console.log(quizData);
+				resolve(quizData.scores);
+				// resolve(quizData.insertedId);
+			} catch (err) {
+				reject('Error creating quiz');
+			}
+		});
+	}
+
 	static update(id, scores) {
 		return new Promise(async (resolve, reject) => {
 			try {

@@ -14,10 +14,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	try {
-		const user = await User.create(req.body.id, req.body.username, req.body.avatar_url);
+		const user = await User.create(req.body.firebase_id, req.body.username);
 		res.status(201).json(user);
 	} catch (err) {
-		res.status(404).json({ err });
+		res.status(500).json({ err });
 	}
 });
 
@@ -27,7 +27,17 @@ router.patch('/:id', async (req, res) => {
 		const updatedUser = await user.update(req.body.avatar_url);
 		res.status(200).json({ user: updatedUser });
 	} catch (err) {
-		res.status(404).json({ err });
+		res.status(500).json({ err });
+	}
+});
+
+router.patch('/:id/highscore/:score', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+		const updatedUser = await user.updateHighScore(req.params.score);
+		res.status(200).json({ user: updatedUser });
+	} catch (err) {
+		res.status(500).json({ err });
 	}
 });
 

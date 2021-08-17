@@ -1,8 +1,8 @@
 describe('Root endpoint', () => {
 	let api;
 
-	beforeEach(() => {
-		resetTestDB();
+	beforeEach(async () => {
+		await resetTestDB();
 	});
 
 	beforeAll(() => {
@@ -18,6 +18,11 @@ describe('Root endpoint', () => {
 
 	it('Should return all rooms', async () => {
 		const res = await request(api).get('/rooms');
-		expect(res.body).toHaveLength(1);
+		expect(res.body.rooms).toHaveLength(1);
+	});
+
+	it('Should return all rooms', async () => {
+		const res = await request(api).get('/rooms');
+		expect(res.body.rooms).toHaveLength(1);
 	});
 });

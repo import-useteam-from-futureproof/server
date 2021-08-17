@@ -1,3 +1,5 @@
+const { request } = require('express');
+
 describe('Quiz endpoints', () => {
 	let api;
 
@@ -22,7 +24,7 @@ describe('Quiz endpoints', () => {
 			difficulty: 'Easy',
 		});
 		const id = res.body;
-
-		expect(res.body).toBe(1);
+		const getQuiz = await request(api).getQuiz(`/quiz/${id}`);
+		expect(getQuiz.body).toBe(1);
 	});
 });

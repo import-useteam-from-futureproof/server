@@ -87,6 +87,25 @@ class User {
 			}
 		});
 	}
+
+	static allScores() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+				// const all = await db.collection('users')
+				const users = await db
+					.collection('users')
+					.find(
+						{ high_score: { $ne: null } },
+						{ username: 1, high_score: 1, _id: 0, firebase_id: 0 }
+					)
+					.toArray();
+				console.log(users);
+			} catch (err) {
+				reject(`${err}`);
+			}
+		});
+	}
 }
 
 module.exports = User;

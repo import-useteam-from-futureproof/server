@@ -1,13 +1,4 @@
-const { MongoClient } = require('mongodb');
-const connectionUrl = process.env.DB_CONNECTION;
-
-const dbName = process.env.DB_NAME;
-
-const init = async () => {
-	let client = await MongoClient.connect(connectionUrl);
-	console.log('connected to database!', dbName);
-	return client.db(dbName);
-};
+const { init } = require('../../dbConfig');
 
 const request = require('supertest');
 const app = require('../../app');
@@ -17,9 +8,10 @@ const resetTestDB = () => {
 	return new Promise(async (res, rej) => {
 		try {
 			const db = await init();
-			await db.collection('users').drop;
-			await db.collection('rooms').drop;
-			await db.collection('quizzes').drop;
+
+			await db.collection('rooms').drop();
+			await db.collection('users').drop();
+
 			await db.collection('rooms').insertOne({
 				name: 'test room 2',
 				owner: 3,
@@ -28,13 +20,12 @@ const resetTestDB = () => {
 				entry_pass: '',
 			});
 			await db.collection('users').insertOne({
-				id: 3,
+				firebase_id: 3,
 				username: 'test',
-				avatar_url: 'test',
 			});
 			res('Test DB reset');
 		} catch (err) {
-			rej('Could not reset TestDB');
+			rej(`Could not reset TestDB: ${err}`);
 		}
 	});
 };

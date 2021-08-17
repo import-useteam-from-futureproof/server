@@ -36,7 +36,7 @@ class Room {
 				let room = new Room({ ...roomData[0], id: roomData[0]._id });
 				resolve(room);
 			} catch (err) {
-				reject('Room not found');
+				reject(`Room not found: ${err}`);
 			}
 		});
 	}

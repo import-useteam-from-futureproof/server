@@ -6,7 +6,7 @@ const User = require('../models/User');
 router.get('/', async (req, res) => {
 	try {
 		const scores = await User.allScores();
-		res.json(scores);
+		res.status(200).json(scores);
 	} catch (err) {
 		res.status(404).json({ err });
 	}

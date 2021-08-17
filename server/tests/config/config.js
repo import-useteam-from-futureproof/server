@@ -20,7 +20,7 @@ const resetTestDB = () => {
 				entry_pass: '',
 			});
 			await db.collection('users').insertOne({
-				firebase_id: 3,
+				firebase_id: '3',
 				username: 'test',
 			});
 			res('Test DB reset');

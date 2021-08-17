@@ -4,12 +4,6 @@ services:
     environment:
       - NODE_ENV=test
     tty: true
-  db:
-    container_name: quiz_test_db
-    volumes:
-      - 'test_db:/var/lib/mongodb/data'
-volumes:
-  test_db:
 networks:
   default:
     name: quiz_test

@@ -7,16 +7,3 @@ services:
       - type: bind
         source: ./server
         target: /code
-    depends_on:
-      - db
-    environment:
-      - DB_NAME=quiz
-      - DB_CONNECTION=mongodb://useTeam:quizpass@db:27017
-  db:
-    image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=useTeam
-      - MONGO_INITDB_DATABASE=quiz
-      - MONGO_INITDB_ROOT_PASSWORD=quizpass
-    volumes:
-      - './db/setup/setup.js:/docker-entrypoint-initdb.d/setup.js:ro'

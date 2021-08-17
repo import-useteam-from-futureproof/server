@@ -87,6 +87,18 @@ class User {
 			}
 		});
 	}
+
+	destroy() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+				const result = await db.collection('users').deleteOne({ _id: this.id });
+				resolve(`User ${result.username} was deleted`);
+			} catch (err) {
+				reject('User could not be deleted');
+			}
+		});
+	}
 }
 
 module.exports = User;

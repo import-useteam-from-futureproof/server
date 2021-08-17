@@ -1,3 +1,4 @@
+const e = require('express');
 const { init } = require('../dbConfig');
 //const { ObjectId } = require('mongodb');
 
@@ -96,6 +97,33 @@ class User {
 				resolve(`User ${result.username} was deleted`);
 			} catch (err) {
 				reject('User could not be deleted');
+      }
+  }
+                       
+	static allScores() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+				const all = await db.collection('users').find().toArray();
+				let allMap = all.map((o) => {
+					const object = {};
+					object.username = o.username;
+					object.high_score = o.high_score;
+					return object;
+				});
+				allMap.sort((a, b) => {
+					if (b.high_score < a.high_score) {
+						return -1;
+					}
+					if (b.high_score > a.high_score) {
+						return 1;
+					} else {
+						return 0;
+					}
+				});
+				resolve(allMap);
+			} catch (err) {
+				reject(`${err}`);
 			}
 		});
 	}

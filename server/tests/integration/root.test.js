@@ -1,6 +1,10 @@
 describe('Root endpoint', () => {
 	let api;
 
+	beforeEach(async () => {
+		await resetTestDB();
+	});
+
 	beforeAll(() => {
 		api = app.listen(3000, () => console.log('Test server running on port 3000'));
 	});
@@ -11,4 +15,14 @@ describe('Root endpoint', () => {
 	});
 
 	it('GET to / returns message Hello world!', () => {});
+
+	it('Should return all rooms', async () => {
+		const res = await request(api).get('/rooms');
+		expect(res.body.rooms).toHaveLength(1);
+	});
+
+	it('Should return all rooms', async () => {
+		const res = await request(api).get('/rooms');
+		expect(res.body.rooms).toHaveLength(1);
+	});
 });

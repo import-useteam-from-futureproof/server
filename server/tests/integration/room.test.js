@@ -66,10 +66,7 @@ describe('Room endpoints', () => {
 			entry_pass: '',
 		});
 		const id = createRes.body;
-		const res = await request(api).post(`/rooms/${id}/join/5`);
-		const otherRes = await request(api).post(`/rooms/${id}/leave/5`);
-		expect(otherRes.statusCode).toEqual(204);
-		const getRes = await request(api).get(`/rooms/${id}`);
-		expect(getRes.body.participants).toHaveLength(1);
+		const res = await request(api).post(`/rooms/${id}/leave/3`);
+		expect(res.statusCode).toEqual(204);
 	});
 });

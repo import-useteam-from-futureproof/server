@@ -12,11 +12,20 @@ const init = async () => {
 		'?retryWrites=true&w=majority';
 
 	const mongoClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+	let database = process.env.ATLAS_DB;
+
+	if (process.env.NODE_ENV == 'development') {
+		database = process.env.ATLAS_DB_DEV;
+	}
+
+	if (process.env.NODE_ENV == 'test') {
+		database = process.env.ATLAS_DB_TEST;
+	}
 
 	try {
 		// Connect to the MongoDB cluster
 		let client = await mongoClient.connect();
-		return client.db(process.env.ATLAS_DB);
+		return client.db(database);
 	} catch (e) {
 		console.error(e);
 	}

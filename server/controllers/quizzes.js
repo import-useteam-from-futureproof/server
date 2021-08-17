@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 	try {
 		const url = `https://opentdb.com/api.php?amount=${req.body.num_questions}&category=${req.body.category}&difficulty=${req.body.difficulty}&type=multiple`;
 		const { data } = await axios.get(url);
-
+		console.log(data);
 		const quizData = {
 			topic: data.results[0].category,
 			difficulty: data.results[0].difficulty,

@@ -1,5 +1,3 @@
-const { request } = require('express');
-
 describe('Quiz endpoints', () => {
 	let api;
 
@@ -20,11 +18,17 @@ describe('Quiz endpoints', () => {
 		const res = await request(api).post('/quiz').send({
 			room_id: 3,
 			num_questions: 10,
-			category: 'Music',
-			difficulty: 'Easy',
+			category: 9,
+			difficulty: 'easy',
 		});
 		const id = res.body;
-		const getQuiz = await request(api).getQuiz(`/quiz/${id}`);
-		expect(getQuiz.body).toBe(1);
+		expect(res.statusCode).toBe(201);
+		const getQuiz = await request(api).get(`/quiz/${id}`);
+		expect(getQuiz.body.difficulty).toBe('easy');
+		expect(getQuiz.body.questions).toHaveLength(10);
 	});
+	//potential
+	// it('Should update scores array on patch request', async () => {
+
+	// });
 });

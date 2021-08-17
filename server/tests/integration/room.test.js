@@ -31,7 +31,6 @@ describe('Room endpoints', () => {
 
 	it('Should add a room on post request', async () => {
 		const res = await request(api).post('/rooms').send({
-			id: '611b743ca1d75368c571e208',
 			name: 'test room 2',
 			owner: 3,
 			max_room_size: 2,
@@ -41,5 +40,36 @@ describe('Room endpoints', () => {
 		expect(res.statusCode).toEqual(201);
 		const allRooms = await request(api).get('/rooms');
 		expect(allRooms.body.rooms).toHaveLength(2);
+	});
+
+	it('Should add user id to participants of a room on join request to room id', async () => {
+		const createRes = await request(api).post('/rooms').send({
+			name: 'test room 2',
+			owner: 3,
+			max_room_size: 2,
+			public_room: true,
+			entry_pass: '',
+		});
+		const id = createRes.body;
+		const res = await request(api).post(`/rooms/${id}/join/5`);
+		expect(res.statusCode).toEqual(204);
+		const getRes = await request(api).get(`/rooms/${id}`);
+		expect(getRes.body.participants).toHaveLength(2);
+	});
+
+	it('Should remove user id from participants of a room on leave request of room id', async () => {
+		const createRes = await request(api).post('/rooms').send({
+			name: 'test room 2',
+			owner: 3,
+			max_room_size: 2,
+			public_room: true,
+			entry_pass: '',
+		});
+		const id = createRes.body;
+		const res = await request(api).post(`/rooms/${id}/join/5`);
+		const otherRes = await request(api).post(`/rooms/${id}/leave/5`);
+		expect(otherRes.statusCode).toEqual(204);
+		const getRes = await request(api).get(`/rooms/${id}`);
+		expect(getRes.body.participants).toHaveLength(1);
 	});
 });

@@ -11,13 +11,16 @@ const resetTestDB = () => {
 
 			const allRooms = await db.collection('rooms').find().toArray();
 			const allUsers = await db.collection('users').find().toArray();
+			const allQuizzes = await db.collection('quizzes').find().toArray();
 			if (allRooms.length > 0) {
 				await db.collection('rooms').drop();
 			}
 			if (allUsers.length > 0) {
 				await db.collection('users').drop();
 			}
-			// await db.collection('quiz').drop();
+			if (allQuizzes.length > 0) {
+				await db.collection('quizzes').drop();
+			}
 
 			await db.collection('rooms').insertOne({
 				name: 'test room 2',

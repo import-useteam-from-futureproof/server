@@ -1,3 +1,4 @@
+const e = require('express');
 const { init } = require('../dbConfig');
 //const { ObjectId } = require('mongodb');
 
@@ -92,15 +93,24 @@ class User {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const db = await init();
-				// const all = await db.collection('users')
-				const users = await db
-					.collection('users')
-					.find(
-						{ high_score: { $ne: null } },
-						{ username: 1, high_score: 1, _id: 0, firebase_id: 0 }
-					)
-					.toArray();
-				console.log(users);
+				const all = await db.collection('users').find().toArray();
+				let allMap = all.map((o) => {
+					const object = {};
+					object.username = o.username;
+					object.high_score = o.high_score;
+					return object;
+				});
+				allMap.sort((a, b) => {
+					if (b.high_score < a.high_score) {
+						return -1;
+					}
+					if (b.high_score > a.high_score) {
+						return 1;
+					} else {
+						return 0;
+					}
+				});
+				resolve(allMap);
 			} catch (err) {
 				reject(`${err}`);
 			}

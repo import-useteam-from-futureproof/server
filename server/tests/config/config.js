@@ -8,16 +8,16 @@ const resetTestDB = () => {
 	return new Promise(async (res, rej) => {
 		try {
 			const db = await init();
-			// const roomLength = await db.collection('rooms').find().toArray().length;
-			// const userLength = await db.collection('users').find().toArray().length;
-			// if (roomLength > 0) {
-			// 	await db.collection('rooms').drop();
-			// }
-			// if (userLength > 0) {
-			// 	await db.collection('users').drop();
-			// }
-			await db.collection('rooms').drop();
-			await db.collection('users').drop();
+
+			const allRooms = await db.collection('rooms').find().toArray();
+			const allUsers = await db.collection('users').find().toArray();
+			if (allRooms.length > 0) {
+				await db.collection('rooms').drop();
+			}
+			if (allUsers.length > 0) {
+				await db.collection('users').drop();
+			}
+			// await db.collection('quiz').drop();
 
 			await db.collection('rooms').insertOne({
 				name: 'test room 2',
@@ -26,6 +26,7 @@ const resetTestDB = () => {
 				public_room: true,
 				entry_pass: '',
 			});
+			// await db.createCollection('quiz');
 			await db.collection('users').insertMany([
 				{
 					firebase_id: '3',

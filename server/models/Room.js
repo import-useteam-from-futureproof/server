@@ -51,11 +51,61 @@ class Room {
 					max_room_size,
 					public_room,
 					entry_pass,
+					participants: [
+						{
+							user: owner,
+						},
+					],
 				});
 
 				resolve(roomData.insertedId);
 			} catch (err) {
 				reject('Error creating room');
+			}
+		});
+	}
+
+	join(userId) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+				let room = await db.collection('rooms').findOne({ _id: this.id });
+
+				if (room.max_room_size <= room.participants.length) {
+					throw new Error('Room at max capacity');
+				}
+
+				const participants = room.participants;
+				participants.push({ user: userId });
+
+				let updateRoom = await db
+					.collection('rooms')
+					.updateOne({ _id: this.id }, { $set: { participants: participants } });
+
+				resolve(updateRoom);
+			} catch (err) {
+				reject('Error joining room');
+			}
+		});
+	}
+
+	leave(userId) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const db = await init();
+				let room = await db.collection('rooms').findOne({ _id: this.id });
+
+				const participants = room.participants.filter(function (obj) {
+					return obj.user !== userId;
+				});
+
+				let updateRoom = await db
+					.collection('rooms')
+					.updateOne({ _id: this.id }, { $set: { participants: participants } });
+
+				resolve(updateRoom);
+			} catch (err) {
+				reject('Error leaving room');
 			}
 		});
 	}

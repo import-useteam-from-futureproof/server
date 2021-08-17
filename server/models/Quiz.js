@@ -5,7 +5,9 @@ class Quiz {
 	constructor(data) {
 		this.id = data.id;
 		this.room_id = data.room_id;
-		this.quizData = data.quizData;
+		this.category = data.category;
+		this.difficulty = data.difficulty;
+		this.questions = data.questions;
 		this.scores = data.scores;
 	}
 
@@ -32,7 +34,9 @@ class Quiz {
 				const db = await init();
 				let quizData = await db.collection('quizzes').insertOne({
 					room_id,
-					quizData: quiz_data,
+					category: quiz_data.topic,
+					difficulty: quiz_data.difficulty,
+					questions: quiz_data.questions,
 					scores,
 				});
 				resolve(quizData.insertedId);

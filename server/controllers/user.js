@@ -41,4 +41,15 @@ router.patch('/:id/highscore/:score', async (req, res) => {
 	}
 });
 
+router.delete('/:id', async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+		console.log(user);
+		const deletedUser = await user.destroy();
+		res.status(204).json(deletedUser);
+	} catch (err) {
+		res.status(500).json({ err });
+	}
+});
+
 module.exports = router;

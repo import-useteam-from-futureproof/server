@@ -5,6 +5,7 @@ class Quiz {
 	constructor(data) {
 		this.id = data.id;
 		this.room_id = data.room_id;
+		this.quizData = data.quizData;
 		this.scores = data.scores;
 	}
 
@@ -24,18 +25,16 @@ class Quiz {
 		});
 	}
 
-	static create(room_id) {
+	static create(room_id, quiz_data) {
 		return new Promise(async (resolve, reject) => {
 			let scores = [];
 			try {
 				const db = await init();
 				let quizData = await db.collection('quizzes').insertOne({
 					room_id,
+					quizData: quiz_data,
 					scores,
 				});
-				console.log(quizData);
-				// let newRoom = new Room(roomData.ops[0]);
-				// console.log(newRoom);
 				resolve(quizData.insertedId);
 			} catch (err) {
 				reject('Error creating quiz');

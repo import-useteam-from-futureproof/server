@@ -36,4 +36,24 @@ router.post('/', async (req, res) => {
 	}
 });
 
+router.post('/:id/join/:userid', async (req, res) => {
+	try {
+		const room = await Room.findById(req.params.id);
+		const joinRoom = await room.join(req.params.userid);
+		res.status(204).json(joinRoom);
+	} catch (err) {
+		res.status(500).json({ err });
+	}
+});
+
+router.post('/:id/leave/:userid', async (req, res) => {
+	try {
+		const room = await Room.findById(req.params.id);
+		const joinRoom = await room.leave(req.params.userid);
+		res.status(204).json(joinRoom);
+	} catch (err) {
+		res.status(500).json({ err });
+	}
+});
+
 module.exports = router;

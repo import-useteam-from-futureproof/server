@@ -9,6 +9,7 @@ class Room {
 		this.max_room_size = data.max_room_size;
 		this.public_room = data.public_room;
 		this.entry_pass = data.entry_pass;
+		this.participants = data.participants;
 	}
 
 	static get all() {

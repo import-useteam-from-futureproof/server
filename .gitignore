@@ -3,3 +3,4 @@ server/package-lock.json
 .env
 .vscode
 .DS_Store
+coverage

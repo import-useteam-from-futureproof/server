@@ -8,7 +8,14 @@ const resetTestDB = () => {
 	return new Promise(async (res, rej) => {
 		try {
 			const db = await init();
-
+			// const roomLength = await db.collection('rooms').find().toArray().length;
+			// const userLength = await db.collection('users').find().toArray().length;
+			// if (roomLength > 0) {
+			// 	await db.collection('rooms').drop();
+			// }
+			// if (userLength > 0) {
+			// 	await db.collection('users').drop();
+			// }
 			await db.collection('rooms').drop();
 			await db.collection('users').drop();
 
@@ -19,10 +26,16 @@ const resetTestDB = () => {
 				public_room: true,
 				entry_pass: '',
 			});
-			await db.collection('users').insertOne({
-				firebase_id: '3',
-				username: 'test',
-			});
+			await db.collection('users').insertMany([
+				{
+					firebase_id: '3',
+					username: 'test',
+				},
+				{
+					firebase_id: '5',
+					username: 'test2',
+				},
+			]);
 			res('Test DB reset');
 		} catch (err) {
 			rej(`Could not reset TestDB: ${err}`);

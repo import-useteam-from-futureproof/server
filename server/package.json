@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node index.js",
 		"dev": "nodemon -L index.js",
-		"test": "jest --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --silent --runInBand --verbose",
+		"test": "jest --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --silent --runInBand --verbose --collectCoverage",
 		"unitTests": "jest --testPathPattern=/unit/ --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --verbose",
 		"integrationTests": "jest --testPathPattern=/integration/ --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --runInBand --verbose",
 		"componentTests": "jest --testPathPattern=/component/ --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --verbose",

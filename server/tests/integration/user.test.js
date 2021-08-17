@@ -39,6 +39,14 @@ describe('User endpoints', () => {
 		const res = await request(api).get('/highscores');
 		expect(res.body[0].username).toEqual('test');
 		expect(res.body[0].high_score).toEqual('3000');
-		expect(res.body).toHaveLength(1);
+		expect(res.body).toHaveLength(2);
+	});
+
+	it('Deletes a user on delete request', async () => {
+		const deleteRes = await request(api).delete('/user/3');
+		const res = await request(api).get('/user/3');
+		const highscores = await request(api).get('/highscores');
+		expect(res.statusCode).toEqual(404);
+		expect(highscores.body).toHaveLength(1);
 	});
 });

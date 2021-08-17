@@ -97,9 +97,10 @@ class User {
 				resolve(`User ${result.username} was deleted`);
 			} catch (err) {
 				reject('User could not be deleted');
-      }
-  }
-                       
+			}
+		});
+	}
+
 	static allScores() {
 		return new Promise(async (resolve, reject) => {
 			try {

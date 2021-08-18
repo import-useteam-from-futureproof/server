@@ -39,6 +39,12 @@ class Quiz {
 					questions: quiz_data.questions,
 					scores,
 				});
+
+				const dataToSend = await db
+					.collection('quizzes')
+					.findOne({ _id: ObjectId(quizData.insertedId) });
+				resolve(dataToSend);
+
 				resolve(quizData.insertedId);
 			} catch (err) {
 				reject('Error creating quiz');
@@ -58,7 +64,7 @@ class Quiz {
 						{ returnOriginal: false }
 					);
 
-				resolve();
+				resolve(scoreData);
 			} catch (err) {
 				console.log(err);
 				reject('Error updating scores');

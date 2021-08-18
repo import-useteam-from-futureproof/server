@@ -1,4 +1,4 @@
-const { init } = require('../dbConfig');
+const { init, close } = require('../dbConfig');
 const { ObjectId } = require('mongodb');
 
 class Room {
@@ -19,6 +19,7 @@ class Room {
 				const db = await init();
 				const roomData = await db.collection('rooms').find().toArray();
 				const rooms = roomData.map((r) => new Room({ ...r, id: r._id }));
+				await close();
 				resolve(rooms);
 			} catch (err) {
 				console.log(err);
@@ -36,6 +37,7 @@ class Room {
 					.find({ _id: ObjectId(id) })
 					.toArray();
 				let room = new Room({ ...roomData[0], id: roomData[0]._id });
+				await close();
 				resolve(room);
 			} catch (err) {
 				reject(`Room not found: ${err}`);
@@ -63,6 +65,7 @@ class Room {
 				const dataToSend = await db
 					.collection('rooms')
 					.findOne({ _id: ObjectId(roomData.insertedId) });
+				await close();
 				resolve(dataToSend);
 			} catch (err) {
 				reject('Error creating room');
@@ -86,7 +89,7 @@ class Room {
 				let updateRoom = await db
 					.collection('rooms')
 					.updateOne({ _id: this.id }, { $set: { participants: participants } });
-
+				await close();
 				resolve(updateRoom);
 			} catch (err) {
 				reject('Error joining room');
@@ -107,7 +110,7 @@ class Room {
 				let updateRoom = await db
 					.collection('rooms')
 					.updateOne({ _id: this.id }, { $set: { participants: participants } });
-
+				await close();
 				resolve(updateRoom);
 			} catch (err) {
 				reject('Error leaving room');
@@ -128,6 +131,7 @@ class Room {
 				quizzes.push(quizId);
 
 				await db.collection('rooms').updateOne({ _id: this.id }, { $set: { quizzes: quizzes } });
+				await close();
 				resolve('Quiz successfully added to the Room');
 			} catch (err) {
 				reject('Error adding Quiz');

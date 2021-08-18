@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "server.js",
 	"scripts": {
-		"start": "node index.js",
+		"start": "node server.js",
 		"dev": "nodemon -L index.js",
 		"test": "jest --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --silent --runInBand --verbose --collectCoverage",
 		"unitTests": "jest --testPathPattern=/unit/ --setupFiles ./tests/config/config.js --watchAll --detectOpenHandles --verbose",

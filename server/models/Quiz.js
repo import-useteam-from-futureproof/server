@@ -1,4 +1,4 @@
-const { init, close } = require('../dbConfig');
+const { init } = require('../dbConfig');
 const { ObjectId } = require('mongodb');
 const Room = require('./Room');
 
@@ -21,7 +21,7 @@ class Quiz {
 					.find({ _id: ObjectId(id) })
 					.toArray();
 				let quiz = new Quiz({ ...quizData[0], id: quizData[0]._id });
-				await close();
+
 				resolve(quiz);
 			} catch (err) {
 				reject('Quiz not found');
@@ -48,7 +48,7 @@ class Quiz {
 				const dataToSend = await db
 					.collection('quizzes')
 					.findOne({ _id: ObjectId(quizData.insertedId) });
-				await close();
+
 				resolve(dataToSend);
 			} catch (err) {
 				reject('Error creating quiz');
@@ -67,7 +67,7 @@ class Quiz {
 						{ $set: { scores: scores } },
 						{ returnOriginal: false }
 					);
-				await close();
+
 				resolve(scoreData);
 			} catch (err) {
 				console.log(err);

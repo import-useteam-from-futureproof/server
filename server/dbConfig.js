@@ -1,18 +1,18 @@
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
-const uri =
-	'mongodb+srv://' +
-	process.env.ATLAS_USER +
-	':' +
-	process.env.ATLAS_PASS +
-	'@pursuit-of-trivia.udq8q.mongodb.net/' +
-	process.env.ATLAS_DB +
-	'?retryWrites=true&w=majority';
-
-const mongoClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
 const init = async () => {
+	const uri =
+		'mongodb+srv://' +
+		process.env.ATLAS_USER +
+		':' +
+		process.env.ATLAS_PASS +
+		'@pursuit-of-trivia.udq8q.mongodb.net/' +
+		process.env.ATLAS_DB +
+		'?retryWrites=true&w=majority';
+
+	const mongoClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
 	let database = process.env.ATLAS_DB;
 
 	if (process.env.NODE_ENV == 'development') {
@@ -32,12 +32,4 @@ const init = async () => {
 	}
 };
 
-const close = async () => {
-	try {
-		mongoClient.close();
-	} catch (err) {
-		console.log(err);
-	}
-};
-
-module.exports = { init, close };
+module.exports = { init };

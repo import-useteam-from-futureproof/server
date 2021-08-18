@@ -1,4 +1,4 @@
-const { init } = require('../dbConfig');
+const { init, close } = require('../dbConfig');
 //const { ObjectId } = require('mongodb');
 
 class User {
@@ -25,7 +25,7 @@ class User {
 					username,
 					avatar_url: `https://avatars.dicebear.com/api/bottts/${username}.svg`,
 				});
-
+				await close();
 				resolve({ _id: userData.insertedId });
 			} catch (err) {
 				reject(`${err}`);
@@ -39,6 +39,7 @@ class User {
 				const db = await init();
 				let userData = await db.collection('users').findOne({ firebase_id: id });
 				let user = new User({ ...userData, id: userData._id });
+				await close();
 				resolve(user);
 			} catch (err) {
 				reject('User not found');
@@ -56,6 +57,7 @@ class User {
 					.collection('users')
 					.findOneAndUpdate(filter, update, { returnDocument: 'after' });
 				const updatedUser = new User({ ...updatedUserData.value, id: updatedUserData._id });
+				await close();
 				resolve(updatedUser);
 			} catch (err) {
 				reject('Error updating user');
@@ -70,7 +72,6 @@ class User {
 
 				const filter = { _id: this.id };
 				const userToCheck = await db.collection('users').findOne(filter);
-				console.log(userToCheck);
 
 				if (userToCheck.high_score > score) {
 					throw new Error('Score is too low, High Score remains unchanged');
@@ -81,6 +82,7 @@ class User {
 					.collection('users')
 					.findOneAndUpdate(filter, update, { returnDocument: 'after' });
 				const updatedUser = new User({ ...updatedUserData.value, id: updatedUserData._id });
+				await close();
 				resolve(updatedUser);
 			} catch (err) {
 				reject(`${err}`);
@@ -93,6 +95,7 @@ class User {
 			try {
 				const db = await init();
 				const result = await db.collection('users').deleteOne({ _id: this.id });
+				await close();
 				resolve(`User ${result.username} was deleted`);
 			} catch (err) {
 				reject('User could not be deleted');
@@ -126,6 +129,7 @@ class User {
 						}
 					})
 					.slice(0, 20);
+				await close();
 				resolve(usersFiltered);
 			} catch (err) {
 				reject(`${err}`);

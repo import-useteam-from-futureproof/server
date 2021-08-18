@@ -17,7 +17,6 @@ router.post('/', async (req, res) => {
 	try {
 		const url = `https://opentdb.com/api.php?amount=${req.body.num_questions}&category=${req.body.category}&difficulty=${req.body.difficulty}&type=multiple`;
 		const { data } = await axios.get(url);
-		console.log(data);
 		const quizData = {
 			topic: data.results[0].category,
 			difficulty: data.results[0].difficulty,
@@ -33,7 +32,7 @@ router.post('/', async (req, res) => {
 		const quiz = await Quiz.create(req.body.room_id, quizData);
 		res.status(201).json(quiz);
 	} catch (err) {
-		res.status(404).json({ err });
+		res.status(500).json({ err });
 	}
 });
 
@@ -42,7 +41,7 @@ router.patch('/:id', async (req, res) => {
 		const quiz = await Quiz.update(req.params.id, req.body.scores);
 		res.status(204).json(quiz);
 	} catch (err) {
-		res.status(404).json({ err });
+		res.status(500).json({ err });
 	}
 });
 

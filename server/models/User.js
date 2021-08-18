@@ -1,4 +1,3 @@
-const e = require('express');
 const { init } = require('../dbConfig');
 //const { ObjectId } = require('mongodb');
 
@@ -105,24 +104,29 @@ class User {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const db = await init();
-				const all = await db.collection('users').find().toArray();
-				let allMap = all.map((o) => {
-					const object = {};
-					object.username = o.username;
-					object.high_score = o.high_score;
-					return object;
-				});
-				allMap.sort((a, b) => {
-					if (b.high_score < a.high_score) {
-						return -1;
-					}
-					if (b.high_score > a.high_score) {
-						return 1;
-					} else {
-						return 0;
-					}
-				});
-				resolve(allMap);
+				const users = await db.collection('users').find({}).toArray();
+				const usersFiltered = users
+					.filter((user) => {
+						return user.high_score !== undefined;
+					})
+					.map(({ username, high_score }) => {
+						return {
+							username,
+							high_score,
+						};
+					})
+					.sort((a, b) => {
+						if (b.high_score < a.high_score) {
+							return -1;
+						}
+						if (b.high_score > a.high_score) {
+							return 1;
+						} else {
+							return 0;
+						}
+					})
+					.slice(0, 20);
+				resolve(usersFiltered);
 			} catch (err) {
 				reject(`${err}`);
 			}

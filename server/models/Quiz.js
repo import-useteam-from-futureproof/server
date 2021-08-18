@@ -1,5 +1,6 @@
 const { init } = require('../dbConfig');
 const { ObjectId } = require('mongodb');
+const Room = require('./Room');
 
 class Quiz {
 	constructor(data) {
@@ -40,12 +41,14 @@ class Quiz {
 					scores,
 				});
 
+				const room = await Room.findById(room_id);
+				await room.addQuiz(quizData.insertedId);
+
 				const dataToSend = await db
 					.collection('quizzes')
 					.findOne({ _id: ObjectId(quizData.insertedId) });
-				resolve(dataToSend);
 
-				resolve(quizData.insertedId);
+				resolve(dataToSend);
 			} catch (err) {
 				reject('Error creating quiz');
 			}

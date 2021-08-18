@@ -59,7 +59,10 @@ class Room {
 					],
 				});
 
-				resolve(roomData.insertedId);
+				const dataToSend = await db
+					.collection('rooms')
+					.findOne({ _id: ObjectId(roomData.insertedId) });
+				resolve(dataToSend);
 			} catch (err) {
 				reject('Error creating room');
 			}

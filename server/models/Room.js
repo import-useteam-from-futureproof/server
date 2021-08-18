@@ -10,6 +10,7 @@ class Room {
 		this.public_room = data.public_room;
 		this.entry_pass = data.entry_pass;
 		this.participants = data.participants;
+		this.quizzes = data.quizzes;
 	}
 
 	static get all() {
@@ -110,6 +111,26 @@ class Room {
 				resolve(updateRoom);
 			} catch (err) {
 				reject('Error leaving room');
+			}
+		});
+	}
+
+	addQuiz(quizId) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let quizzes = [];
+				const db = await init();
+				let room = await db.collection('rooms').findOne({ _id: this.id });
+
+				if (room.quizzes) {
+					quizzes = room.quizzes;
+				}
+				quizzes.push(quizId);
+
+				await db.collection('rooms').updateOne({ _id: this.id }, { $set: { quizzes: quizzes } });
+				resolve('Quiz successfully added to the Room');
+			} catch (err) {
+				reject('Error adding Quiz');
 			}
 		});
 	}

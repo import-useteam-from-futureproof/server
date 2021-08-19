@@ -51,12 +51,23 @@ class User {
 		});
 	}
 
-	update(avatar_url) {
+	update(value, type) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
-				const filter = { firebase_id: this.id };
-				const update = { $set: { avatar_url: avatar_url } };
+				const filter = { _id: this.id };
+				let update;
+
+				switch (type) {
+					case 'avatar':
+						update = { $set: { avatar_url: value } };
+						break;
+					case 'username':
+						update = { $set: { username: value } };
+						break;
+					default:
+						throw new Error('No type to update on');
+				}
+
 				const updatedUserData = await db
 					.get()
 					.collection('users')

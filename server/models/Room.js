@@ -1,4 +1,5 @@
-const { init } = require('../dbConfig');
+//const { init } = require('../dbConfig');
+const db = require('../dbConnection');
 const { ObjectId } = require('mongodb');
 
 class Room {
@@ -16,8 +17,8 @@ class Room {
 	static get all() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
-				const roomData = await db.collection('rooms').find().toArray();
+				//const db = await init();
+				const roomData = await db.get().collection('rooms').find({}).toArray();
 				const rooms = roomData.map((r) => new Room({ ...r, id: r._id }));
 
 				resolve(rooms);
@@ -31,8 +32,9 @@ class Room {
 	static findById(id) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
+				//const db = await init();
 				let roomData = await db
+					.get()
 					.collection('rooms')
 					.find({ _id: ObjectId(id) })
 					.toArray();
@@ -48,21 +50,25 @@ class Room {
 	static create(name, owner, max_room_size, public_room, entry_pass) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
-				let roomData = await db.collection('rooms').insertOne({
-					name,
-					owner,
-					max_room_size,
-					public_room,
-					entry_pass,
-					participants: [
-						{
-							user: owner,
-						},
-					],
-				});
+				//const db = await init();
+				let roomData = await db
+					.get()
+					.collection('rooms')
+					.insertOne({
+						name,
+						owner,
+						max_room_size,
+						public_room,
+						entry_pass,
+						participants: [
+							{
+								user: owner,
+							},
+						],
+					});
 
 				const dataToSend = await db
+					.get()
 					.collection('rooms')
 					.findOne({ _id: ObjectId(roomData.insertedId) });
 
@@ -76,8 +82,8 @@ class Room {
 	join(userId) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
-				let room = await db.collection('rooms').findOne({ _id: this.id });
+				//const db = await init();
+				let room = await db.get().collection('rooms').findOne({ _id: this.id });
 
 				if (room.max_room_size <= room.participants.length) {
 					throw new Error('Room at max capacity');
@@ -87,6 +93,7 @@ class Room {
 				participants.push({ user: userId });
 
 				let updateRoom = await db
+					.get()
 					.collection('rooms')
 					.updateOne({ _id: this.id }, { $set: { participants: participants } });
 
@@ -100,14 +107,15 @@ class Room {
 	leave(userId) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
-				let room = await db.collection('rooms').findOne({ _id: this.id });
+				//const db = await init();
+				let room = await db.get().collection('rooms').findOne({ _id: this.id });
 
 				const participants = room.participants.filter(function (obj) {
 					return obj.user !== userId;
 				});
 
 				let updateRoom = await db
+					.get()
 					.collection('rooms')
 					.updateOne({ _id: this.id }, { $set: { participants: participants } });
 
@@ -122,15 +130,18 @@ class Room {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let quizzes = [];
-				const db = await init();
-				let room = await db.collection('rooms').findOne({ _id: this.id });
+				//const db = await init();
+				let room = await db.get().collection('rooms').findOne({ _id: this.id });
 
 				if (room.quizzes) {
 					quizzes = room.quizzes;
 				}
 				quizzes.push(quizId);
 
-				await db.collection('rooms').updateOne({ _id: this.id }, { $set: { quizzes: quizzes } });
+				await db
+					.get()
+					.collection('rooms')
+					.updateOne({ _id: this.id }, { $set: { quizzes: quizzes } });
 
 				resolve('Quiz successfully added to the Room');
 			} catch (err) {

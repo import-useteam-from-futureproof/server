@@ -1,5 +1,3 @@
-//const { init } = require('../dbConfig');
-//const { ObjectId } = require('mongodb');
 const db = require('../dbConnection');
 
 class User {
@@ -14,8 +12,6 @@ class User {
 	static create(firebase_id, username) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
-
 				const user = await db.get().collection('users').findOne({ username: username });
 				if (user) {
 					throw new Error('Username already in use');
@@ -40,7 +36,6 @@ class User {
 	static findById(id) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
 				let userData = await db.get().collection('users').findOne({ firebase_id: id });
 				let user = new User({ ...userData, id: userData._id });
 
@@ -84,8 +79,6 @@ class User {
 	updateHighScore(score) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
-
 				const filter = { _id: this.id };
 				const userToCheck = await db.get().collection('users').findOne(filter);
 
@@ -110,7 +103,6 @@ class User {
 	destroy() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
 				const result = await db.get().collection('users').deleteOne({ _id: this.id });
 
 				resolve(`User ${result.username} was deleted`);
@@ -123,23 +115,23 @@ class User {
 	static allScores() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
 				const users = await db.get().collection('users').find({}).toArray();
 				const usersFiltered = users
 					.filter((user) => {
 						return user.high_score !== undefined;
 					})
-					.map(({ username, high_score }) => {
+					.map(({ username, avatar_url, high_score }) => {
 						return {
 							username,
+							avatar_url,
 							high_score,
 						};
 					})
 					.sort((a, b) => {
-						if (b.high_score < a.high_score) {
+						if (parseInt(b.high_score) < parseInt(a.high_score)) {
 							return -1;
 						}
-						if (b.high_score > a.high_score) {
+						if (parseInt(b.high_score) > parseInt(a.high_score)) {
 							return 1;
 						} else {
 							return 0;

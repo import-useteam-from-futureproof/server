@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
-		const updatedUser = await user.update(req.body.avatar_url);
+		const updatedUser = await user.update(req.body.value, req.body.type);
 		res.status(200).json({ user: updatedUser });
 	} catch (err) {
 		res.status(500).json({ err });

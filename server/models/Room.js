@@ -12,6 +12,7 @@ class Room {
 		this.entry_pass = data.entry_pass;
 		this.participants = data.participants;
 		this.quizzes = data.quizzes;
+		this.open = data.open;
 	}
 
 	static get all() {
@@ -29,17 +30,28 @@ class Room {
 		});
 	}
 
+	static get allOpen() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const roomData = await db.get().collection('rooms').find({ open: true }).toArray();
+				const rooms = roomData.map((r) => new Room({ ...r, id: r._id }));
+				resolve(rooms);
+			} catch (err) {
+				console.log(err);
+				reject('Error retrieving all open rooms');
+			}
+		});
+	}
+
 	static findById(id) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
 				let roomData = await db
 					.get()
 					.collection('rooms')
 					.find({ _id: ObjectId(id) })
 					.toArray();
 				let room = new Room({ ...roomData[0], id: roomData[0]._id });
-
 				resolve(room);
 			} catch (err) {
 				reject(`Room not found: ${err}`);
@@ -50,7 +62,6 @@ class Room {
 	static create(name, owner, max_room_size, public_room, entry_pass) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				//const db = await init();
 				let roomData = await db
 					.get()
 					.collection('rooms')
@@ -65,6 +76,7 @@ class Room {
 								user: owner,
 							},
 						],
+						open: true,
 					});
 
 				const dataToSend = await db
@@ -122,6 +134,20 @@ class Room {
 				resolve(updateRoom);
 			} catch (err) {
 				reject('Error leaving room');
+			}
+		});
+	}
+
+	close() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				await db
+					.get()
+					.collection('rooms')
+					.updateOne({ _id: this.id }, { $set: { open: false } });
+				resolve('Room successfully closed');
+			} catch (err) {
+				reject('Failed to close room');
 			}
 		});
 	}

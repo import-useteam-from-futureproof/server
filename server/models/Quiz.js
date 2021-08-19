@@ -1,4 +1,5 @@
-const { init } = require('../dbConfig');
+//const { init } = require('../dbConfig');
+const db = require('../dbConnection');
 const { ObjectId } = require('mongodb');
 const Room = require('./Room');
 
@@ -15,8 +16,9 @@ class Quiz {
 	static findById(id) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
+				//const db = await init();
 				let quizData = await db
+					.get()
 					.collection('quizzes')
 					.find({ _id: ObjectId(id) })
 					.toArray();
@@ -33,8 +35,8 @@ class Quiz {
 		return new Promise(async (resolve, reject) => {
 			let scores = [];
 			try {
-				const db = await init();
-				let quizData = await db.collection('quizzes').insertOne({
+				//const db = await init();
+				let quizData = await db.get().collection('quizzes').insertOne({
 					room_id,
 					category: quiz_data.topic,
 					difficulty: quiz_data.difficulty,
@@ -46,6 +48,7 @@ class Quiz {
 				await room.addQuiz(quizData.insertedId);
 
 				const dataToSend = await db
+					.get()
 					.collection('quizzes')
 					.findOne({ _id: ObjectId(quizData.insertedId) });
 
@@ -59,8 +62,9 @@ class Quiz {
 	static update(id, scores) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
+				//const db = await init();
 				let scoreData = await db
+					.get()
 					.collection('quizzes')
 					.findOneAndUpdate(
 						{ _id: ObjectId(id) },

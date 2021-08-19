@@ -1,5 +1,6 @@
-const { init } = require('../dbConfig');
+//const { init } = require('../dbConfig');
 //const { ObjectId } = require('mongodb');
+const db = require('../dbConnection');
 
 class User {
 	constructor(data) {
@@ -13,18 +14,21 @@ class User {
 	static create(firebase_id, username) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
+				//const db = await init();
 
-				const user = await db.collection('users').findOne({ username: username });
+				const user = await db.get().collection('users').findOne({ username: username });
 				if (user) {
 					throw new Error('Username already in use');
 				}
 
-				let userData = await db.collection('users').insertOne({
-					firebase_id,
-					username,
-					avatar_url: `https://avatars.dicebear.com/api/bottts/${username}.svg`,
-				});
+				let userData = await db
+					.get()
+					.collection('users')
+					.insertOne({
+						firebase_id,
+						username,
+						avatar_url: `https://avatars.dicebear.com/api/bottts/${username}.svg`,
+					});
 
 				resolve({ _id: userData.insertedId });
 			} catch (err) {
@@ -36,8 +40,8 @@ class User {
 	static findById(id) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
-				let userData = await db.collection('users').findOne({ firebase_id: id });
+				//const db = await init();
+				let userData = await db.get().collection('users').findOne({ firebase_id: id });
 				let user = new User({ ...userData, id: userData._id });
 
 				resolve(user);
@@ -50,10 +54,11 @@ class User {
 	update(avatar_url) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
+				//const db = await init();
 				const filter = { firebase_id: this.id };
 				const update = { $set: { avatar_url: avatar_url } };
 				const updatedUserData = await db
+					.get()
 					.collection('users')
 					.findOneAndUpdate(filter, update, { returnDocument: 'after' });
 				const updatedUser = new User({ ...updatedUserData.value, id: updatedUserData._id });
@@ -68,10 +73,10 @@ class User {
 	updateHighScore(score) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
+				//const db = await init();
 
 				const filter = { _id: this.id };
-				const userToCheck = await db.collection('users').findOne(filter);
+				const userToCheck = await db.get().collection('users').findOne(filter);
 
 				if (userToCheck.high_score > score) {
 					throw new Error('Score is too low, High Score remains unchanged');
@@ -79,6 +84,7 @@ class User {
 
 				const update = { $set: { high_score: score } };
 				const updatedUserData = await db
+					.get()
 					.collection('users')
 					.findOneAndUpdate(filter, update, { returnDocument: 'after' });
 				const updatedUser = new User({ ...updatedUserData.value, id: updatedUserData._id });
@@ -93,8 +99,8 @@ class User {
 	destroy() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
-				const result = await db.collection('users').deleteOne({ _id: this.id });
+				//const db = await init();
+				const result = await db.get().collection('users').deleteOne({ _id: this.id });
 
 				resolve(`User ${result.username} was deleted`);
 			} catch (err) {
@@ -106,8 +112,8 @@ class User {
 	static allScores() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const db = await init();
-				const users = await db.collection('users').find({}).toArray();
+				//const db = await init();
+				const users = await db.get().collection('users').find({}).toArray();
 				const usersFiltered = users
 					.filter((user) => {
 						return user.high_score !== undefined;

@@ -76,7 +76,7 @@ class Room {
 								user: owner,
 							},
 						],
-						open: true,
+						open: false,
 					});
 
 				const dataToSend = await db
@@ -167,7 +167,7 @@ class Room {
 				await db
 					.get()
 					.collection('rooms')
-					.updateOne({ _id: this.id }, { $set: { quizzes: quizzes } });
+					.updateOne({ _id: this.id }, { $set: { open: true, quizzes: quizzes } });
 
 				resolve('Quiz successfully added to the Room');
 			} catch (err) {

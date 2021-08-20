@@ -82,11 +82,11 @@ class User {
 				const filter = { _id: this.id };
 				const userToCheck = await db.get().collection('users').findOne(filter);
 
-				if (userToCheck.high_score > score) {
+				if (userToCheck.high_score > parseInt(score)) {
 					throw new Error('Score is too low, High Score remains unchanged');
 				}
 
-				const update = { $set: { high_score: score } };
+				const update = { $set: { high_score: parseInt(score) } };
 				const updatedUserData = await db
 					.get()
 					.collection('users')
